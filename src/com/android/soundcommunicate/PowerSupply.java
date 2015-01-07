@@ -30,18 +30,36 @@ public class PowerSupply {
 			pwStop();
 
 		pwAT = new AudioTrack(AudioManager.STREAM_MUSIC,
-									 80000,
+									 20000,
 									 AudioFormat.CHANNEL_OUT_MONO,
-									 AudioFormat.ENCODING_PCM_8BIT,
-									 pwMinBufferSize*2,
-									 AudioTrack.MODE_STATIC);
+									 AudioFormat.ENCODING_PCM_16BIT,
+									 pwMinBufferSize,
+									 AudioTrack.MODE_STREAM);
 
 		powerIsSupplying = true;
-		pwAT.write(carrierSignal, 0, carrierSignal.length);
-		pwAT.flush();
+
 		pwAT.setStereoVolume(1, 0);
-		pwAT.setLoopPoints(0, carrierSignal.length, -1);
+		//pwAT.setLoopPoints(0, carrierSignal.length, -1);
 		pwAT.play();
+
+		new powerThread(pwAT, carrierSignal).start();
+	}
+
+	class powerThread extends Thread {
+		AudioTrack pwAT;
+		short[] data;
+		powerThread(AudioTrack pwAT, short[] data) {
+			this.pwAT = pwAT;
+			this.data = data;
+		}
+
+		@Override
+		public void run() {
+			while(powerIsSupplying) {
+				pwAT.write(data, 0, data.length);
+				pwAT.flush();
+			}
+		}
 	}
 
 	public void pwStop() {

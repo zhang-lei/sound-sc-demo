@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:textColor="#f00"
         android:textSize="24dp"
+        android:visibility="gone"
         android:text="@string/powerFreq"/>
 
     <SeekBar
@@ -32,6 +33,7 @@
         android:layout_height="wrap_content"
         android:max="15000"
         android:padding="5dip"
+        android:visibility="gone"
         android:progress="3400" />
 
     <RelativeLayout
