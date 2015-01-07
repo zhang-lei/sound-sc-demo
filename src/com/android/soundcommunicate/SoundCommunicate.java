@@ -88,16 +88,17 @@ public class SoundCommunicate extends Activity {
 				if (isChecked) {			
 					powerOnOff = true;
 					// 左声道提供电源支持
-					byte[] tt = new byte[1024];
+					short[] tt = new short[1000];
 
-					byte a = 0x7f;
-					for (int i = 1; i <= 1024; i++) {
+					short a = 0x7ff;
+					for (int i = 0; i < 1000; i++) {
 
-						if (i % 8 == 0 ) {
-							a = (byte)-a;
-						} else {
-							tt[i] = a;
+						if (i % 10 == 0 ) {
+							a = (short)-a;
 						}
+
+						tt[i] = a;
+
 					}
 
 					power.setPowerIsSupplying(true);

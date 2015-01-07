@@ -17,20 +17,20 @@ public class PowerSupply {
 
 	private boolean powerIsSupplying = false;
 
-	public static int pwMinBufferSize = AudioTrack.getMinBufferSize(10000,
-					AudioFormat.CHANNEL_OUT_STEREO,AudioFormat.ENCODING_PCM_8BIT);
+	public static int pwMinBufferSize = AudioTrack.getMinBufferSize(20000,
+					AudioFormat.CHANNEL_OUT_STEREO,AudioFormat.ENCODING_PCM_16BIT);
 	AudioTrack pwAT;
 
 	public boolean powerIsSupplying(){
 		return powerIsSupplying;
 	}
 
-	public void pwStart(byte[] carrierSignal) {
+	public void pwStart(short[] carrierSignal) {
 		if(powerIsSupplying)
 			pwStop();
 
 		pwAT = new AudioTrack(AudioManager.STREAM_MUSIC,
-									 10000,
+									 80000,
 									 AudioFormat.CHANNEL_OUT_MONO,
 									 AudioFormat.ENCODING_PCM_8BIT,
 									 pwMinBufferSize*2,
