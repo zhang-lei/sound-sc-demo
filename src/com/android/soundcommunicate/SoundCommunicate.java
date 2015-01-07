@@ -87,22 +87,16 @@ public class SoundCommunicate extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
 				if (isChecked) {			
 					powerOnOff = true;
+
 					// 左声道提供电源支持
-					short[] tt = new short[1000];
+					StringBuffer data = new StringBuffer();
 
-					short a = 0x7ff;
-					for (int i = 0; i < 1000; i++) {
-
-						if (i % 10 == 0 ) {
-							a = (short)-a;
-						}
-
-						tt[i] = a;
-
+					for (int i = 0; i < 120; i++) {
+						data.append("11111111");
 					}
 
 					power.setPowerIsSupplying(true);
-					power.pwStart(tt);
+					power.pwStart(WaveUtil.package2wave(data.toString()));
 
 					freqSeekBarProcess();
 				} else {

@@ -27,20 +27,16 @@ public class MessageOut {
 	}
 
 	static int baudRate = 16000;
-	static int maxRate = 48000;
-	static int delayBit = 0;
-	private static byte ihigh = (byte) (-128);
-	private static byte ilow = (byte) (127);
 
 	AudioTrack audioplayer;
 	static int  minSize ;
 
 	public void play (String str) {
 
-		// byte[] send = getBuffer(str);
+
 		short[] send = convert2Byte(str);
 
-		// short[] send = getShortData(str.getBytes(), str.getBytes().length);
+
 		minSize = AudioTrack.getMinBufferSize(baudRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT);
 		audioplayer = new AudioTrack(AudioManager.STREAM_MUSIC, baudRate, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, minSize, AudioTrack.MODE_STREAM);
 
@@ -161,44 +157,5 @@ public class MessageOut {
 			}
 		}
 		return newbuf;
-	}
-
-	// 通过byteDate转为short型 的声音数据
-	private short[] getShortData(byte[] data, int lenght) {
-		int j = 0;
-		String strBinary = getstrBinary(data, lenght);
-		int len = strBinary.length();
-		int m_bitDateSize = len * baudRate;
-		short[] m_pRightDate = new short[m_bitDateSize];
-		for (int i = 0; i < len; i++) {
-			int ct = baudRate;
-			if (strBinary.charAt(i) == '1') {
-				while (ct-- > 0) {
-					// m_pRightDate[j++] = min_iAmp;
-					m_pRightDate[j++] = 32767;
-				}
-			} else {
-				while (ct-- > 0) {
-					// m_pRightDate[j++] = max_iAmp;
-					m_pRightDate[j++] = -32767;
-				}
-			}
-		}
-		return m_pRightDate;
-	}
-
-	// 将一个字节编码转为2进制字符串
-	private String getstrBinary(byte[] data, int lenght) {
-		StringBuffer strDate = new StringBuffer(lenght * 8);
-		for (int i = 0; i < lenght; i++) {
-			String str = Integer.toBinaryString(data[i]);
-			// System.out.println("str:"+str);
-			while (str.length() < 8) {
-				str = '0' + str;
-			}
-			strDate.append(str);
-		}
-		Log.i("strDate: " ,strDate+"");
-		return strDate.toString();
 	}
 }

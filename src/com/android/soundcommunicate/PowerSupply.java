@@ -18,7 +18,7 @@ public class PowerSupply {
 	private boolean powerIsSupplying = false;
 
 	public static int pwMinBufferSize = AudioTrack.getMinBufferSize(20000,
-					AudioFormat.CHANNEL_OUT_STEREO,AudioFormat.ENCODING_PCM_16BIT);
+					AudioFormat.CHANNEL_CONFIGURATION_MONO,AudioFormat.ENCODING_PCM_16BIT);
 	AudioTrack pwAT;
 
 	public boolean powerIsSupplying(){
@@ -63,11 +63,14 @@ public class PowerSupply {
 	}
 
 	public void pwStop() {
+
+		powerIsSupplying = false;
 		if(pwAT != null)
 		{
+			pwAT.stop();
 			pwAT.release();
 			pwAT = null;
 		}
-		powerIsSupplying = false;
+
 	}
 }//end class
