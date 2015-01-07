@@ -1,0 +1,16 @@
+<resources>
+
+    <string name="app_name">音频测试</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_sound_communicate">测试</string>
+    <string name="defSendMsg">10</string>
+    <string name="sendMsg">发送消息</string>
+    <string name="powerOn">电源开</string>
+    <string name="powerOff">电源关</string>
+    <string name="powerFreq">电源频率：</string>
+    <string name="recMsgOn">消息开</string>
+    <string name="recMsgOff">消息关</string>
+    <string name="havdRecdMsgs">接收到的消息(mcst 1/0):\n</string>
+
+</resources>

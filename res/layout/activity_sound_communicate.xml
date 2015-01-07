@@ -1,0 +1,71 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/sendMsgBtuuon"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.07"
+        android:text="@string/sendMsg"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/et_MsgSend"
+        android:layout_width="fill_parent"
+        android:layout_height="81dp"
+        android:text="@string/defSendMsg" />
+
+    <TextView
+        android:id="@+id/freqTV"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#f00"
+        android:textSize="24dp"
+        android:text="@string/powerFreq"/>
+
+    <SeekBar
+        android:id="@+id/freqSeekBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:max="15000"
+        android:padding="5dip"
+        android:progress="3400" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.005"
+        android:orientation="horizontal" >
+
+        <ToggleButton
+            android:id="@+id/recordButton"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:textSize="20dp" 
+            android:layout_alignParentRight="true"
+            android:textOff="@string/recMsgOff"
+            android:textOn="@string/recMsgOn" />
+
+        <ToggleButton
+            android:id="@+id/audioPlayButton"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:textOff="@string/powerOff"
+            android:textOn="@string/powerOn"
+            android:textSize="20dp" />
+
+   </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_recMsg"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/havdRecdMsgs" />
+
+</LinearLayout>
