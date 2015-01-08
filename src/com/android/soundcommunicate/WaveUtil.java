@@ -54,9 +54,12 @@ public class WaveUtil {
         
         /*
          * 如果不足8位 进行补零操作
-         * 补齐8位
+         * 补齐8位 如果高位为1 去掉高位
          */
         int count = binary.length();
+        if (count == 8) {
+            binary = binary.substring(1);
+        }
         for (int i = 0; i < 8 - count; i++) {
         	binary = "0" + binary;
         }
@@ -90,12 +93,12 @@ public class WaveUtil {
     	
     	/*
     	 *  数据见补位
-    	 *  多个数据之间存在间隔 16 个 1(空位 标识没有数据)
+    	 *  多个数据之间存在间隔 32 个 1(空位 标识没有数据)
     	 */
-    	String gap = Integer.toBinaryString(0xffff);
+    	String gap = Integer.toBinaryString(0xffffffff);
     	
     	/*
-    	 * 前后各补充16个空位
+    	 * 前面补充16个空位
     	 */
     	strPackage.append(gap);
     	
@@ -103,8 +106,11 @@ public class WaveUtil {
         for (int i= 0; i < byteCnt; i++) {
         	strPackage.append(byte2package(datas[i]));
         }
-        
-        strPackage.append(gap);
+
+        /*
+         * 后面补充128位
+         */
+        strPackage.append(gap).append(gap).append(gap).append(gap);
         
         return strPackage;
     	
@@ -114,13 +120,14 @@ public class WaveUtil {
      * 将包格式 转换成 波形数组
      * 
      * @param pkg 包格式字符串
+     * @param bitcount 半个波长的位数
      * @return 返回波形数组
      * 
      * @author zhanglei
      * @date 2015-01-05
      * 
      */
-    public static short[] package2wave(String pkg) {
+    public static short[] package2wave(String pkg, int bitcount) {
     	
     	if (pkg == null) {
     		return null;
@@ -139,17 +146,17 @@ public class WaveUtil {
          * 创建新的字节数组
          * 存放转化后的波形
          */
-        short[] newbuf = new short[cnt * 8];         // 记录最大数字
+        short[] newbuf = new short[cnt * bitcount];         // 记录最大数字
         int bufindex = 0;
         for (int i = 0; i < cnt; i++) {
             
             char c = pkg.charAt(i);
             if ( c == '0') {
-                for (int k = 0; k < 8; k ++) {
+                for (int k = 0; k < bitcount; k ++) {
                     newbuf[bufindex++] = 0x7fff;
                 }
             } else {
-                for (int k = 0; k < 8; k ++) {
+                for (int k = 0; k < bitcount; k ++) {
                     newbuf[bufindex++] = -0x7fff;
                 }
             }
@@ -161,19 +168,20 @@ public class WaveUtil {
      * 将字节数组转换成为波形数组(方波 等频)
      * @param datas 字节数组
      * @param byteCnt 字节数组的长度
+     * @param bitcount
      * @return 返回波形数组
      * 
      * @author zhanglei
      * @date 2015-01-05
      */
-    public static short[] byte2wave(final byte[] datas, int byteCnt) {
+    public static short[] byte2wave(final byte[] datas, int byteCnt, int bitcount) {
     	
     	/*
     	 * 获取字节数组的包格式 
     	 */
     	StringBuffer strPackage = bytes2package(datas, byteCnt);
     	
-    	return package2wave(strPackage.toString());
+    	return package2wave(strPackage.toString(), bitcount);
     	
     }
 }

@@ -17,7 +17,7 @@ public class PowerSupply {
 
 	private boolean powerIsSupplying = false;
 
-	public static int pwMinBufferSize = AudioTrack.getMinBufferSize(16000,
+	public static int pwMinBufferSize = AudioTrack.getMinBufferSize(40000,
 					AudioFormat.CHANNEL_CONFIGURATION_MONO,AudioFormat.ENCODING_PCM_16BIT);
 	AudioTrack pwAT;
 
@@ -25,12 +25,12 @@ public class PowerSupply {
 		return powerIsSupplying;
 	}
 
-	public void pwStart(short[] carrierSignal) {
+	public void pwStart() {
 		if(powerIsSupplying)
 			pwStop();
 
 		pwAT = new AudioTrack(AudioManager.STREAM_MUSIC,
-									 16000,
+									 40000,
 									 AudioFormat.CHANNEL_OUT_MONO,
 									 AudioFormat.ENCODING_PCM_16BIT,
 									 pwMinBufferSize,
@@ -60,7 +60,7 @@ public class PowerSupply {
 				tdata.append("11111111");
 			}
 
-			this.data = WaveUtil.package2wave(tdata.toString());
+			this.data = WaveUtil.package2wave(tdata.toString(), 8);
 		}
 
 		@Override

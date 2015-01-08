@@ -88,15 +88,8 @@ public class SoundCommunicate extends Activity {
 				if (isChecked) {			
 					powerOnOff = true;
 
-					// 左声道提供电源支持
-					StringBuffer data = new StringBuffer();
-
-					for (int i = 0; i < 120; i++) {
-						data.append("11111111");
-					}
-
 					power.setPowerIsSupplying(true);
-					power.pwStart(WaveUtil.package2wave(data.toString()));
+					power.pwStart();
 
 					freqSeekBarProcess();
 				} else {
