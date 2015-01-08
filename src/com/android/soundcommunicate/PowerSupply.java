@@ -17,7 +17,7 @@ public class PowerSupply {
 
 	private boolean powerIsSupplying = false;
 
-	public static int pwMinBufferSize = AudioTrack.getMinBufferSize(20000,
+	public static int pwMinBufferSize = AudioTrack.getMinBufferSize(16000,
 					AudioFormat.CHANNEL_CONFIGURATION_MONO,AudioFormat.ENCODING_PCM_16BIT);
 	AudioTrack pwAT;
 
@@ -30,7 +30,7 @@ public class PowerSupply {
 			pwStop();
 
 		pwAT = new AudioTrack(AudioManager.STREAM_MUSIC,
-									 20000,
+									 16000,
 									 AudioFormat.CHANNEL_OUT_MONO,
 									 AudioFormat.ENCODING_PCM_16BIT,
 									 pwMinBufferSize,
@@ -41,21 +41,32 @@ public class PowerSupply {
 		pwAT.setStereoVolume(1, 0);
 		//pwAT.setLoopPoints(0, carrierSignal.length, -1);
 		pwAT.play();
+		//}
+		// 如果需要供电 需要设置循环点
+		// audioplayer.setLoopPoints(0, minSize, -1);
 
-		new powerThread(pwAT, carrierSignal).start();
+		new powerThread(pwAT).start();
 	}
 
 	class powerThread extends Thread {
 		AudioTrack pwAT;
 		short[] data;
-		powerThread(AudioTrack pwAT, short[] data) {
+		powerThread(AudioTrack pwAT) {
 			this.pwAT = pwAT;
-			this.data = data;
+			// 左声道提供电源支持
+			StringBuffer tdata = new StringBuffer();
+
+			for (int i = 0; i < 1000; i++) {
+				tdata.append("11111111");
+			}
+
+			this.data = WaveUtil.package2wave(tdata.toString());
 		}
 
 		@Override
 		public void run() {
 			while(powerIsSupplying) {
+
 				pwAT.write(data, 0, data.length);
 				pwAT.flush();
 			}
