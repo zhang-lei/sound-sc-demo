@@ -4,13 +4,33 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/sendMsgBtuuon"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.07"
-        android:text="@string/sendMsg"
-        android:textSize="20dp" />
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.005"
+            android:orientation="horizontal" >
+
+        <Button
+                android:id="@+id/sendMsgBtuuon"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.07"
+                android:layout_alignParentRight="true"
+                android:text="@string/sendMsg"
+                android:textSize="20dp" />
+
+        <ToggleButton
+                android:id="@+id/linkButton"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:textOff="连接"
+                android:textOn="关闭连接"
+                android:textSize="20dp" />
+
+    </RelativeLayout>
 
     <EditText
         android:id="@+id/et_MsgSend"

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class SoundCommunicate extends Activity {
@@ -33,11 +35,17 @@ public class SoundCommunicate extends Activity {
 	SoundRecord myRec; 
 	ToggleButton powerOnOffTB;
 	ToggleButton recordTB;
+	ToggleButton linkTB;
 	Button sendMsgBT;
 	SeekBar freqSB;
 	TextView freqTV;
 	TextView recMsgTV;
 	EditText msgSendET;
+
+	/*
+	 * 判断是否有耳机
+	 */
+	boolean isHeadSet = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +53,7 @@ public class SoundCommunicate extends Activity {
 		setContentView(R.layout.activity_sound_communicate);
 		powerOnOffTB = (ToggleButton) findViewById(R.id.audioPlayButton);
 		sendMsgBT = (Button) findViewById(R.id.sendMsgBtuuon);
+		linkTB = (ToggleButton) findViewById(R.id.linkButton);
 		msgSendET = (EditText) findViewById(R.id.et_MsgSend);
 		recordTB = (ToggleButton) findViewById(R.id.recordButton);
 		freqSB = (SeekBar) findViewById(R.id.freqSeekBar);
@@ -58,10 +67,14 @@ public class SoundCommunicate extends Activity {
 		freqTV.setText(SoundCommunicate.this.getString(R.string.powerFreq) + String.valueOf(latestFrequency) + "Hz");
 		
 		powerOnOffButtonProcess();
+
+		linkButtonProcess();
 		
 		sendMsgButtionProcess();
 		
 		recordButtonProcess();
+
+		registerHeadsetPlugReceiver();
 	}
 	
 	private void recordButtonProcess(){
@@ -80,6 +93,20 @@ public class SoundCommunicate extends Activity {
 		});
 	}
 
+	private void linkButtonProcess(){
+		linkTB.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+				if (isChecked) {
+					Toast.makeText(SoundCommunicate.this, "开始连接", Toast.LENGTH_SHORT).show();
+					msg.connect();
+				} else {
+					msg.disconnect();
+					Toast.makeText(SoundCommunicate.this, "关闭连接", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+	}
 
 	private void powerOnOffButtonProcess(){
 		powerOnOffTB.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -91,7 +118,7 @@ public class SoundCommunicate extends Activity {
 					power.setPowerIsSupplying(true);
 					power.pwStart();
 
-					freqSeekBarProcess();
+					// freqSeekBarProcess();
 				} else {
 					power.setPowerIsSupplying(false);
 					power.pwStop();
@@ -110,7 +137,7 @@ public class SoundCommunicate extends Activity {
 				String txt = msgSendET.getText().toString();
 				
 				if(txt != null) {
-					msg.msgStart(txt);
+					msg.play(txt);
 				}
 			}
 		});
@@ -158,10 +185,11 @@ public class SoundCommunicate extends Activity {
 			power = null;
 		}
 		if (msg != null) {
-			msg.msgStop();
+			msg.disconnect();
 			msg = null;
 		}
 		//android.os.Process.killProcess(android.os.Process.myPid());
+		unregisterReceiver(headsetPlugReceiver);
 	}
 
 	@Override
@@ -180,5 +208,36 @@ public class SoundCommunicate extends Activity {
 			return;
 		}
 		recMsgTV.setText(recMsgTV.getText() + msg);
+	}
+
+	private HeadsetPlugReceiver headsetPlugReceiver;
+
+	public class HeadsetPlugReceiver extends BroadcastReceiver {
+
+		private static final String TAG = "HeadsetPlugReceiver";
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.hasExtra("state")){
+				if (intent.getIntExtra("state", 0) == 0){
+					Toast.makeText(context, "headset not connected", Toast.LENGTH_LONG).show();
+					// msg.invalidMsgStop();
+					isHeadSet = false;
+				}
+				else if (intent.getIntExtra("state", 0) == 1){
+					Toast.makeText(context, "headset connected", Toast.LENGTH_LONG).show();
+					// msg.invalidMsgStart();
+					isHeadSet = true;
+				}
+			}
+		}
+
+	}
+
+	private void registerHeadsetPlugReceiver() {
+		headsetPlugReceiver = new HeadsetPlugReceiver();
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("android.intent.action.HEADSET_PLUG");
+		registerReceiver(headsetPlugReceiver, intentFilter);
 	}
 }
