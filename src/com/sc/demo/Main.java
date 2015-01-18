@@ -1,4 +1,4 @@
-package com.android.soundcommunicate;
+package com.sc.demo;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-public class SoundCommunicate extends Activity {
+public class Main extends Activity {
 	public final String TAG = "SoundCommunicate";
 	public final static int maxDataBufSize = 256;
 	public final static int POWERSUPPLY = 0;
@@ -32,7 +31,7 @@ public class SoundCommunicate extends Activity {
 	private boolean powerOnOff = false;
 	MessageOut msg;
 	PowerSupply power;
-	SoundRecord myRec; 
+	MessageRecv myRec;
 	ToggleButton powerOnOffTB;
 	ToggleButton recordTB;
 	ToggleButton linkTB;
@@ -61,10 +60,10 @@ public class SoundCommunicate extends Activity {
 		recMsgTV = (TextView)findViewById(R.id.tv_recMsg);
 		power = new PowerSupply();
 		msg = new MessageOut(); 
-		myRec = new SoundRecord();
+		myRec = new MessageRecv();
 		myRec.setContext(this);
 		
-		freqTV.setText(SoundCommunicate.this.getString(R.string.powerFreq) + String.valueOf(latestFrequency) + "Hz");
+		freqTV.setText(Main.this.getString(R.string.powerFreq) + String.valueOf(latestFrequency) + "Hz");
 		
 		powerOnOffButtonProcess();
 
@@ -98,11 +97,11 @@ public class SoundCommunicate extends Activity {
 
 			public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
 				if (isChecked) {
-					Toast.makeText(SoundCommunicate.this, "开始连接", Toast.LENGTH_SHORT).show();
+					Toast.makeText(Main.this, "开始连接", Toast.LENGTH_SHORT).show();
 					msg.connect();
 				} else {
 					msg.disconnect();
-					Toast.makeText(SoundCommunicate.this, "关闭连接", Toast.LENGTH_SHORT).show();
+					Toast.makeText(Main.this, "关闭连接", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -165,7 +164,7 @@ public class SoundCommunicate extends Activity {
 				latestFrequency = progress;
 				if (oldFrequency != latestFrequency) {
 					oldFrequency = latestFrequency;
-					freqTV.setText(SoundCommunicate.this.getString(R.string.powerFreq) + String.valueOf(latestFrequency) + "Hz");
+					freqTV.setText(Main.this.getString(R.string.powerFreq) + String.valueOf(latestFrequency) + "Hz");
 
 					if (powerOnOff) {
 						 // power.pwStart(cc.carrierSignalGen(latestFrequency));
