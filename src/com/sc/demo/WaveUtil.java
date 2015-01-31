@@ -191,9 +191,10 @@ public class WaveUtil {
 
     /**
      * 获取空数据
+     * @ freq 设置频率 半波数据采样点  默认是 freq * 8
      * @return 返回空数据对应的方波数组
      */
-    public static short[] getNullData() {
+    public static short[] getNullData(float freq) {
         // 空数据初始化
         StringBuffer tdata = new StringBuffer();
 
@@ -201,7 +202,7 @@ public class WaveUtil {
             tdata.append("11111111");
         }
 
-        return package2wave(tdata.toString(), 8);
+        return package2wave(tdata.toString(),(int)( (float) 8 / freq));
     }
     
     /**

@@ -50,7 +50,7 @@
         android:id="@+id/sendFreqSeekBar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:max="10000"
+        android:max="12000"
         android:padding="5dip"
         android:progress="1000" />
 

@@ -13,7 +13,7 @@ public class MessageOut {
 	/**
 	 * 空值频率 默认是1k
 	 */
-	private int frequency = 1;    // 1k
+	private float frequency = 1;    // 1k
 
 	AudioTrack audioplayer;
 	static int  minSize = 0;
@@ -56,11 +56,13 @@ public class MessageOut {
 		short[] data = null;
 
 		short[] nodata = null;
+
+		float lastFreq = frequency;
 		SendThread(AudioTrack player) {
 			this.player = player;
 
 			// 空数据初始化
-			this.nodata = WaveUtil.getNullData();
+			this.nodata = WaveUtil.getNullData(frequency);
 		}
 
 		@Override
@@ -73,7 +75,7 @@ public class MessageOut {
 					player.flush();
 					data = null;
 				} else {
-					sendNoData();
+					sendNoData(frequency);
 				}
 			}
 
@@ -82,7 +84,12 @@ public class MessageOut {
 			player = null;
 		}
 
-		private void sendNoData() {
+		private void sendNoData(float frequency) {
+			if (frequency != lastFreq) {
+				this.nodata = WaveUtil.getNullData(frequency);
+				lastFreq = frequency;
+			}
+
 			player.write(nodata, 0, nodata.length);
 			player.flush();
 		}
@@ -119,13 +126,11 @@ public class MessageOut {
 		return WaveUtil.byte2wave(bData, 64, (int)Math.floor(8 / frequency));
 	}
 
-
-
-	public int getFrequency() {
-		return frequency;
+	public float getFrequency() {
+		return this.frequency;
 	}
 
-	public void setFrequency(int frequency) {
-		frequency = frequency;
+	public void setFrequency(float frequency) {
+		this.frequency = frequency;
 	}
 }

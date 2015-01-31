@@ -54,7 +54,7 @@ public class PowerSupply {
 		powerThread(AudioTrack pwAT) {
 			this.pwAT = pwAT;
 			// 左声道提供电源支持
-			this.data = WaveUtil.getNullData();
+			this.data = WaveUtil.getNullData(1);
 		}
 
 		@Override

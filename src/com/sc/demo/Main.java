@@ -24,10 +24,15 @@ public class Main extends Activity {
 	public final static int maxDataBufSize = 256;
 	public final static int POWERSUPPLY = 0;
 	public final static int MESSAGEOUT = 1;
-	private final int minFrequency = 100;
-	private final int powerSupplyFreq = 3400;
+	private final int minFrequency = 500;
+	private final int powerSupplyFreq = 10000;
 	private int oldFrequency = 0;
-	private int latestFrequency = powerSupplyFreq;
+	private int latestFrequency = 1000;
+
+	// 判断是否连接电路板
+	private boolean isLinked = false;
+
+	// 是否电源开启
 	private boolean powerOnOff = false;
 	MessageOut msg;
 	PowerSupply power;
@@ -99,7 +104,14 @@ public class Main extends Activity {
 				if (isChecked) {
 					Toast.makeText(Main.this, "开始连接", Toast.LENGTH_SHORT).show();
 					msg.connect();
+
+					isLinked = true;
+
+					// 开启频率调整
+					freqSeekBarProcess();
 				} else {
+
+					isLinked = false;
 					msg.disconnect();
 					Toast.makeText(Main.this, "关闭连接", Toast.LENGTH_SHORT).show();
 				}
@@ -132,10 +144,8 @@ public class Main extends Activity {
 				// byte[] bts = cc.soundCording(msgSendET.getText().toString().getBytes());
 
 				String txt = msgSendET.getText().toString();
-				
-				if(txt != null) {
-					msg.play(txt);
-				}
+
+				msg.play(txt);
 			}
 		});
 	}
@@ -164,8 +174,9 @@ public class Main extends Activity {
 					oldFrequency = latestFrequency;
 					freqTV.setText(Main.this.getString(R.string.sendFreq) + String.valueOf(latestFrequency) + "Hz");
 
-					if (powerOnOff) {
-						 // power.pwStart(cc.carrierSignalGen(latestFrequency));
+					if (isLinked) {
+						// 设置发送的频率
+						msg.setFrequency( (float)latestFrequency / 1000);
 					}
 				} 
 		}
