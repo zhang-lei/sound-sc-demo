@@ -1,26 +1,24 @@
  package com.sc.demo;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+ import java.io.BufferedOutputStream;
+ import java.io.BufferedWriter;
+ import java.io.File;
+ import java.io.FileOutputStream;
+ import java.io.IOException;
+ import java.io.OutputStream;
+ import java.io.OutputStreamWriter;
+ import java.util.ArrayList;
+ import java.util.List;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
-import android.media.MediaRecorder;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
+ import android.annotation.SuppressLint;
+ import android.content.Context;
+ import android.media.AudioFormat;
+ import android.media.AudioRecord;
+ import android.media.MediaRecorder;
+ import android.os.Environment;
+ import android.os.Handler;
+ import android.os.Message;
+ import android.util.Log;
 
  /**
   * 接收硬件传输过来的信息
@@ -133,13 +131,17 @@ public class MessageRecv {
 
 						// 解码规则
 						List<String> checklist = new ArrayList<String>();
-						List<Integer> value = getByteValue(recvMsg, checklist);
+						List<Integer> value = WaveUtil.getByteValue(recvMsg, checklist);
 
 						/**
 						 * 解析信息
 						 */
 						 StringBuffer dataBuf = new StringBuffer();
 						for (int i = 0; i < value.size(); i++) {
+
+							/**
+							 * 转换成16进制
+							 */
 							String _data = String.format("%02x%s ", value.get(i), checklist.get(i));
 							dataBuf.append(_data);
 						}
@@ -186,86 +188,4 @@ public class MessageRecv {
 		}
 	};
 
-
-	/**
-	 * 定义解析的格式
-	 */
-	static String startPattern = "(0{7,9}1{3,5})";
-	static String bitPattern = "(1{4,5}0{4,5}|0{4,5}1{4,5})";
-	static String stopPattern = "(1{4,5}0{4,5}1{4,5}0{4,5}1{4,5})";
-
-	static StringBuffer pattern = new StringBuffer();
-
-	static {
-		pattern.append(startPattern);
-
-		for (int i = 0; i < 9; i ++) {
-			pattern.append(bitPattern);
-		}
-
-		pattern.append(stopPattern);
-
-	}
-
-
-	public  List<Integer> getByteValue(StringBuffer msg, List<String> checklist) {
-		List<Integer> value = new ArrayList<Integer>();
-		if (checklist == null) {
-			checklist = new ArrayList<String>();
-		}
-		Matcher matcher = Pattern.compile(pattern.toString()).matcher(msg);
-
-		int offset = -1;
-		while (matcher.find()) {
-
-			char[] b = new char[8];
-			b[7] = getBitValue(matcher.group(2));
-			b[6] = getBitValue(matcher.group(3));
-			b[5] = getBitValue(matcher.group(4));
-			b[4] = getBitValue(matcher.group(5));
-			b[3] = getBitValue(matcher.group(6));
-			b[2] = getBitValue(matcher.group(7));
-			b[1] = getBitValue(matcher.group(8));
-			b[0] = getBitValue(matcher.group(9));
-
-
-
-			String t = String.valueOf(b);
-			value.add(Integer.parseInt(t, 2));
-
-			char check = getBitValue(matcher.group(10));
-
-			// 处理校验结果
-			int checkCnt = 0;
-			for (char c : b) {
-				if (c == '1') {
-					checkCnt++;
-				}
-			}
-
-			if (checkCnt % 2 == 1 && check == '1' || checkCnt % 2 == 0 && check == '0') {
-				checklist.add("+");
-			} else {
-				checklist.add("-");
-			}
-
-			offset = matcher.end();
-		}
-
-		if (offset != -1) {
-			msg.delete(0, offset);
-		}
-
-		return value;
-	}
-
-	public  char getBitValue(String bit) {
-		if (bit.startsWith("1")) {
-			return '1';
-		} else if (bit.startsWith("0")) {
-			return '0';
-		}
-		return '0';
-	}
-
-}//MyAudioRecord end
+}//MessageRecv end

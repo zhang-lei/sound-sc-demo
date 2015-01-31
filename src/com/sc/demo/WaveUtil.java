@@ -1,5 +1,10 @@
 package com.sc.demo;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * 波形编码工具类 <p/>
  * 包含 字符编码 解码
@@ -13,6 +18,26 @@ public class WaveUtil {
      * 波特率
      */
     public static final int baudRate = 16000;
+
+    /**
+     * 定义解析的格式
+     */
+    static String startPattern = "(0{7,9}1{3,5})";
+    static String bitPattern = "(1{4,5}0{4,5}|0{4,5}1{4,5})";
+    static String stopPattern = "(1{4,5}0{4,5}1{4,5}0{4,5}1{4,5})";
+
+    static StringBuffer pattern = new StringBuffer();
+
+    static {
+        pattern.append(startPattern);
+
+        for (int i = 0; i < 9; i ++) {
+            pattern.append(bitPattern);
+        }
+
+        pattern.append(stopPattern);
+
+    }
     
     /**
      * 将一个字节封装成一个数据包
@@ -163,6 +188,21 @@ public class WaveUtil {
         }
         return newbuf;
     }
+
+    /**
+     * 获取空数据
+     * @return 返回空数据对应的方波数组
+     */
+    public static short[] getNullData() {
+        // 空数据初始化
+        StringBuffer tdata = new StringBuffer();
+
+        for (int i = 0; i < 1000; i++) {
+            tdata.append("11111111");
+        }
+
+        return package2wave(tdata.toString(), 8);
+    }
     
     /**
      * 将字节数组转换成为波形数组(方波 等频)
@@ -183,5 +223,71 @@ public class WaveUtil {
     	
     	return package2wave(strPackage.toString(), bitcount);
     	
+    }
+
+    /**
+     * 将接收到的字符转换成二级制的字节
+     * @param msg 接收到的PCM 量化后的值
+     * @param(out) checklist 校验结果 如果是空 将创建并赋值
+     * @return 返回过滤后的结果 10进制
+     */
+    public static List<Integer> getByteValue(StringBuffer msg, List<String> checklist) {
+        List<Integer> value = new ArrayList<Integer>();
+        if (checklist == null) {
+            checklist = new ArrayList<String>();
+        }
+        Matcher matcher = Pattern.compile(pattern.toString()).matcher(msg);
+
+        int offset = -1;
+        while (matcher.find()) {
+
+            char[] b = new char[8];
+            b[7] = getBitValue(matcher.group(2));
+            b[6] = getBitValue(matcher.group(3));
+            b[5] = getBitValue(matcher.group(4));
+            b[4] = getBitValue(matcher.group(5));
+            b[3] = getBitValue(matcher.group(6));
+            b[2] = getBitValue(matcher.group(7));
+            b[1] = getBitValue(matcher.group(8));
+            b[0] = getBitValue(matcher.group(9));
+
+
+
+            String t = String.valueOf(b);
+            value.add(Integer.parseInt(t, 2));
+
+            char check = getBitValue(matcher.group(10));
+
+            // 处理校验结果
+            int checkCnt = 0;
+            for (char c : b) {
+                if (c == '1') {
+                    checkCnt++;
+                }
+            }
+
+            if (checkCnt % 2 == 1 && check == '1' || checkCnt % 2 == 0 && check == '0') {
+                checklist.add("+");
+            } else {
+                checklist.add("-");
+            }
+
+            offset = matcher.end();
+        }
+
+        if (offset != -1) {
+            msg.delete(0, offset);
+        }
+
+        return value;
+    }
+
+    private static  char getBitValue(String bit) {
+        if (bit.startsWith("1")) {
+            return '1';
+        } else if (bit.startsWith("0")) {
+            return '0';
+        }
+        return '0';
     }
 }

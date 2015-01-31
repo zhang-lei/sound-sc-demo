@@ -10,6 +10,11 @@ public class MessageOut {
 
 	static int baudRate = 16000;
 
+	/**
+	 * 空值频率 默认是1k
+	 */
+	private int frequency = 1;    // 1k
+
 	AudioTrack audioplayer;
 	static int  minSize = 0;
 
@@ -55,13 +60,7 @@ public class MessageOut {
 			this.player = player;
 
 			// 空数据初始化
-			StringBuffer tdata = new StringBuffer();
-
-			for (int i = 0; i < 1000; i++) {
-				tdata.append("11111111");
-			}
-
-			this.nodata = WaveUtil.package2wave(tdata.toString(), 8);
+			this.nodata = WaveUtil.getNullData();
 		}
 
 		@Override
@@ -98,7 +97,7 @@ public class MessageOut {
 	 * @param msg
 	 * @return
 	 */
-	public static short[] convert2Byte(final String msg) {
+	public short[] convert2Byte(final String msg) {
 
 		int data = 0;
 		if (msg.contains("0x")) {
@@ -117,6 +116,16 @@ public class MessageOut {
 			bData[i] = (byte)(data + i);
 		}
 
-		return WaveUtil.byte2wave(bData, 64, 8);
+		return WaveUtil.byte2wave(bData, 64, (int)Math.floor(8 / frequency));
+	}
+
+
+
+	public int getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(int frequency) {
+		frequency = frequency;
 	}
 }

@@ -54,13 +54,7 @@ public class PowerSupply {
 		powerThread(AudioTrack pwAT) {
 			this.pwAT = pwAT;
 			// 左声道提供电源支持
-			StringBuffer tdata = new StringBuffer();
-
-			for (int i = 0; i < 1000; i++) {
-				tdata.append("11111111");
-			}
-
-			this.data = WaveUtil.package2wave(tdata.toString(), 8);
+			this.data = WaveUtil.getNullData();
 		}
 
 		@Override

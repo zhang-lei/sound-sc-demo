@@ -116,8 +116,6 @@ public class Main extends Activity {
 
 					power.setPowerIsSupplying(true);
 					power.pwStart();
-
-					// freqSeekBarProcess();
 				} else {
 					power.setPowerIsSupplying(false);
 					power.pwStop();
