@@ -8,7 +8,7 @@
     <string name="sendMsg">发送消息</string>
     <string name="powerOn">电源开</string>
     <string name="powerOff">电源关</string>
-    <string name="powerFreq">电源频率：</string>
+    <string name="sendFreq">空数据频率：</string>
     <string name="recMsgOn">消息开</string>
     <string name="recMsgOff">消息关</string>
     <string name="havdRecdMsgs">接收到的消息(mcst 1/0):\n</string>

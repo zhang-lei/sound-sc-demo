@@ -39,22 +39,20 @@
         android:text="@string/defSendMsg" />
 
     <TextView
-        android:id="@+id/freqTV"
+        android:id="@+id/sendTV"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#f00"
         android:textSize="24dp"
-        android:visibility="gone"
-        android:text="@string/powerFreq"/>
+        android:text="@string/sendFreq"/>
 
     <SeekBar
-        android:id="@+id/freqSeekBar"
+        android:id="@+id/sendFreqSeekBar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:max="15000"
+        android:max="10000"
         android:padding="5dip"
-        android:visibility="gone"
-        android:progress="3400" />
+        android:progress="1000" />
 
     <RelativeLayout
         android:layout_width="fill_parent"

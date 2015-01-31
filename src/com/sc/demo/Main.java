@@ -55,15 +55,15 @@ public class Main extends Activity {
 		linkTB = (ToggleButton) findViewById(R.id.linkButton);
 		msgSendET = (EditText) findViewById(R.id.et_MsgSend);
 		recordTB = (ToggleButton) findViewById(R.id.recordButton);
-		freqSB = (SeekBar) findViewById(R.id.freqSeekBar);
-		freqTV = (TextView) findViewById(R.id.freqTV);
+		freqSB = (SeekBar) findViewById(R.id.sendFreqSeekBar);
+		freqTV = (TextView) findViewById(R.id.sendTV);
 		recMsgTV = (TextView)findViewById(R.id.tv_recMsg);
 		power = new PowerSupply();
 		msg = new MessageOut(); 
 		myRec = new MessageRecv();
 		myRec.setContext(this);
 		
-		freqTV.setText(Main.this.getString(R.string.powerFreq) + String.valueOf(latestFrequency) + "Hz");
+		freqTV.setText(Main.this.getString(R.string.sendFreq) + String.valueOf(latestFrequency) + "Hz");
 		
 		powerOnOffButtonProcess();
 
@@ -162,7 +162,7 @@ public class Main extends Activity {
 				latestFrequency = progress;
 				if (oldFrequency != latestFrequency) {
 					oldFrequency = latestFrequency;
-					freqTV.setText(Main.this.getString(R.string.powerFreq) + String.valueOf(latestFrequency) + "Hz");
+					freqTV.setText(Main.this.getString(R.string.sendFreq) + String.valueOf(latestFrequency) + "Hz");
 
 					if (powerOnOff) {
 						 // power.pwStart(cc.carrierSignalGen(latestFrequency));
