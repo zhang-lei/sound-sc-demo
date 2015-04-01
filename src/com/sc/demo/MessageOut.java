@@ -62,7 +62,7 @@ public class MessageOut {
 			this.player = player;
 
 			// 空数据初始化
-			this.nodata = WaveUtil.getNullData(frequency);
+			// this.nodata = WaveUtil.getNullData(frequency);
 		}
 
 		@Override
@@ -75,7 +75,7 @@ public class MessageOut {
 					player.flush();
 					data = null;
 				} else {
-					sendNoData(frequency);
+					// sendNoData(frequency);
 				}
 			}
 
