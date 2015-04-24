@@ -82,12 +82,12 @@ public class WaveUtil {
          * 补齐8位 如果高位为1 去掉高位
          */
         int count = binary.length();
-        if (count == 8) {
-            binary = binary.substring(1);
+        if (count != 8) {
+        	for (int i = 0; i < 8 - count; i++) {
+            	binary = "0" + binary;
+            }
         }
-        for (int i = 0; i < 8 - count; i++) {
-        	binary = "0" + binary;
-        }
+        
 
         /*
          * 封装包格式
