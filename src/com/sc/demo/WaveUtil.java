@@ -46,14 +46,14 @@ public class WaveUtil {
      * 然后 拼成   起始位(0) 数据位(8bit) 校验位  停止位 这样的格式
      * e.g.  0 10000100 0 111
      * 
-     * @param data byte 值
+     * @param data short 值
      * @return 返回 byte转换成的数据包
      * 
      * @author zhanglei4517@gmail.com
      * @date 2015-01-05
      * 
      */
-    public static StringBuffer byte2package(final byte data) {
+    public static StringBuffer byte2package(final short data) {
     	
     	// 转换成二进制字符串
         String binary = Integer.toBinaryString(data);
@@ -112,7 +112,7 @@ public class WaveUtil {
      * @author zhanglei
      * @date 2015-01-05
      */
-    public static StringBuffer bytes2package(final byte[] datas, int byteCnt) {
+    public static StringBuffer bytes2package(final short[] datas, int byteCnt) {
     	
     	StringBuffer strPackage = new StringBuffer();
     	
@@ -215,7 +215,7 @@ public class WaveUtil {
      * @author zhanglei
      * @date 2015-01-05
      */
-    public static short[] byte2wave(final byte[] datas, int byteCnt, int bitcount) {
+    public static short[] byte2wave(final short[] datas, int byteCnt, int bitcount) {
     	
     	/*
     	 * 获取字节数组的包格式 

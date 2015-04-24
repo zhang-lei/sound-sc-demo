@@ -118,9 +118,9 @@ public class MessageOut {
 			return null;
 		}
 
-		byte[] bData = new byte[64];
+		short[] bData = new short[64];
 		for (int i = 0; i < 64; i++) {
-			bData[i] = (byte)(data + i);
+			bData[i] = (short)(data + i);
 		}
 
 		return WaveUtil.byte2wave(bData, 64, (int)Math.floor(8 / frequency));
