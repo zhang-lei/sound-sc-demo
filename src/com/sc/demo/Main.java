@@ -143,9 +143,24 @@ public class Main extends Activity {
 			public void onClick(View v) {
 				// byte[] bts = cc.soundCording(msgSendET.getText().toString().getBytes());
 
-				String txt = msgSendET.getText().toString();
-
-				msg.play(txt);
+				// String txt = msgSendET.getText().toString();
+				
+				
+				
+				short[] bytes = new short[64];
+				bytes[0] = (short) 0x81;
+				bytes[1] = (short) 0x00;
+				bytes[2] = (short) 0x00;
+				bytes[3] = (short) 0xff;
+				bytes[4] = (short) 0x3a;
+				for(int i = 0x01 ; i <= 0x3a ; i++){
+					bytes[4 + i] = (short) i;
+				}
+				
+				short[] tmp = new short[63];
+				System.arraycopy(bytes, 0, tmp, 0, 63);
+				bytes[63] = CRC8.calcCrc8(tmp);
+				msg.play(bytes);
 			}
 		});
 	}

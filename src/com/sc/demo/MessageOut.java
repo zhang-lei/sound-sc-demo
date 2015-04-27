@@ -38,9 +38,17 @@ public class MessageOut {
 		sendThread.start();
 	}
 
+	/**
+	 * 发送 0 - 255 连续64个数字
+	 * @param str
+	 */
 	public void play (String str) {
 
 		sendThread.setData(convert2Byte(str));
+	}
+	
+	public void play(short[] data) {
+		sendThread.setData(WaveUtil.byte2wave(data, 64, (int)Math.floor(8 / frequency)));
 	}
 
 	public void disconnect() {
@@ -75,7 +83,10 @@ public class MessageOut {
 					player.flush();
 					data = null;
 				} else {
+					
+					// 发送一次就清空
 					// sendNoData(frequency);
+					// this.nodata = null;
 				}
 			}
 
